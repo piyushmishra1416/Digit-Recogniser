@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Recognition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: rgb(251, 251, 251);
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid rgb(249, 250, 249);
+            background-color: #000;
+        }
+        button {
+            background-color: #121212;
+            border: 2px solid rgb(22, 230, 95);
+            border-radius: 5px;
+            color: rgb(248, 250, 248);
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.5s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #0f0;
+            color: #000;
+            transform: scale(1.1);
+        }
+        #prediction {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Digit Recognition</h1>
+    <canvas id="canvas" width="280" height="280"></canvas><br>
+    <button onclick="clearCanvas()">Clear</button>
+    <button onclick="predictDigit()">Predict</button><br>
+    <div id="prediction"></div>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var mousePressed = false;
+        var lastX, lastY;
+        
+        canvas.addEventListener("mousedown", function (e) {
+            mousePressed = true;
+            draw(e.offsetX, e.offsetY, false);
+        });
+
+        canvas.addEventListener("mousemove", function (e) {
+            if (mousePressed) {
+                draw(e.offsetX, e.offsetY, true);
+            }
+        });
+
+        canvas.addEventListener("mouseup", function (e) {
+            mousePressed = false;
+        });
+
+        canvas.addEventListener("mouseleave", function (e) {
+            mousePressed = false;
+        });
+
+        function draw(x, y, isDown) {
+            if (isDown) {
+                ctx.beginPath();
+                ctx.strokeStyle = "#0f0"; // Neon stroke color
+                ctx.lineWidth = 10;
+                ctx.lineJoin = "round";
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.closePath();
+                ctx.stroke();
+            }
+            lastX = x;
+            lastY = y;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            $('#prediction').text('');
+        }
+
+        function predictDigit() {
+            var canvas = document.getElementById('canvas');
+            var imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, '');
+            $.ajax({
+                type: "POST",
+                url: "/predict_digit",
+                data: {image_data: imageData},
+                success: function(response) {
+                    $('#prediction').text('Predicted Digit: ' + response.prediction);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
