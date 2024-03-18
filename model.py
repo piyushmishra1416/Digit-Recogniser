@@ -1,3 +1,4 @@
+# Piyush - 2021BEC0023
 import numpy as np
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
@@ -6,7 +7,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.preprocessing import MinMaxScaler
 import pickle
 
-# Load MNIST dataset
+
 mnist = fetch_openml('mnist_784', version=1)
 X, y = mnist["data"], mnist["target"]
 

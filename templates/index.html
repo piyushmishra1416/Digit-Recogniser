@@ -5,52 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digit Recognition</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #121212;
-            color: rgb(251, 251, 251);
+            background-color: #111; /* Dark background for contrast */
+            color: #ff5722; /* Fiery text color */
             text-align: center;
+            padding: 20px;
+        }
+        header {
+            color: #ff9800; /* Warm header color */
+            padding: 10px;
+            margin-bottom: 20px;
         }
         canvas {
-            border: 2px solid rgb(249, 250, 249);
-            background-color: #000;
+            border: 1px solid #ff5722; /* Fiery border */
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(255, 87, 34, 0.5); /* Soft glow effect */
         }
         button {
-            background-color: #121212;
-            border: 2px solid rgb(22, 230, 95);
-            border-radius: 5px;
-            color: rgb(248, 250, 248);
+            background-color: #ff5722; /* Fiery button background */
+            border: none;
+            border-radius: 4px;
+            color: #fff;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.5s, transform 0.2s;
+            margin: 0 10px;
+            box-shadow: 0 2px 4px rgba(255, 87, 34, 0.5); /* Button shadow for depth */
         }
         button:hover {
-            background-color: #0f0;
-            color: #000;
-            transform: scale(1.1);
+            background-color: #e64a19; /* Darker shade on hover for interactivity */
+            transform: scale(1.05);
         }
         #prediction {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffd700; /* Bright yellow for high visibility */
+    opacity: 0; /* Initial state remains invisible */
+    transition: opacity 0.5s; /* Smooth transition for visibility */
+}
+
+#prediction.show {
+    opacity: 1; /* Fully visible when the 'show' class is added */
+}
+
     </style>
 </head>
 <body>
-    <h1>Digit Recognition</h1>
+    <header>
+        <h1>Digit Recognition</h1>
+    </header>
     <canvas id="canvas" width="280" height="280"></canvas><br>
-    <button onclick="clearCanvas()">Clear</button>
-    <button onclick="predictDigit()">Predict</button><br>
+    <button onclick="clearCanvas()"><i class="material-icons">delete</i> Clear</button>
+    <button onclick="predictDigit()"><i class="material-icons">search</i> Predict</button><br>
+    <p>@created by Piyush - 2021BEC0023</p>
     <div id="prediction"></div>
     <script>
         var canvas = document.getElementById('canvas');
         var ctx = canvas.getContext('2d');
         var mousePressed = false;
         var lastX, lastY;
-        
+
         canvas.addEventListener("mousedown", function (e) {
             mousePressed = true;
             draw(e.offsetX, e.offsetY, false);
@@ -99,6 +121,7 @@
                 data: {image_data: imageData},
                 success: function(response) {
                     $('#prediction').text('Predicted Digit: ' + response.prediction);
+                    $('#prediction').addClass('show'); 
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);

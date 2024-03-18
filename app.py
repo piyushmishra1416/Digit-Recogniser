@@ -1,3 +1,4 @@
+# Piyush - 2021BEC0023
 from flask import Flask, render_template, request, jsonify
 from PIL import Image
 import io
@@ -7,7 +8,6 @@ import pickle
 
 app = Flask(__name__)
 
-# Load the trained SVM model
 with open("model.pkl", "rb") as f:
     svm_model = pickle.load(f)
 
